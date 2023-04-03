@@ -3,7 +3,7 @@ import logging
 from typing import List, Dict, Callable, Type, Union, TYPE_CHECKING
 from allocation.domain import commands, events
 from . import handlers
-from tenacity import Retrying, RetryError, stop_after_attempt, wait_exponential
+#from tenacity import Retrying, RetryError, stop_after_attempt, wait_exponential
 
 if TYPE_CHECKING:
     from . import unit_of_work
