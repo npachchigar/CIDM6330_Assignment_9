@@ -5,6 +5,7 @@ from datetime import date
 from allocation.domain import model
 from allocation.domain.model import OrderLine
 
+
 if TYPE_CHECKING:
     from . import unit_of_work
 
