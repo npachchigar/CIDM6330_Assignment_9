@@ -16,7 +16,14 @@ class Product:
         try:
             batch = next(b for b in sorted(self.batches) if b.can_allocate(line))
             batch.allocate(line)
-            self.version_number += 1
+            self.events.append(
+                events.Allocated(
+                    orderid=line.orderid,
+                    sku=line.sku,
+                    qty=line.qty,
+                    batchref=batch.reference,
+                )
+            )
             return batch.reference
         except StopIteration:
             self.events.append(events.OutOfStock(line.sku))
@@ -68,10 +75,6 @@ class Batch:
         if self.can_allocate(line):
             self._allocations.add(line)
 
-    def deallocate(self, line: OrderLine):
-        if line in self._allocations:
-            self._allocations.remove(line)
-
     def deallocate_one(self) -> OrderLine:
         return self._allocations.pop()
         
@@ -86,3 +89,7 @@ class Batch:
 
     def can_allocate(self, line: OrderLine) -> bool:
         return self.sku == line.sku and self.available_quantity >= line.qty
+
+    @property
+    def orderids(self):
+        return {l.orderid for l in self._allocations}
